@@ -67,6 +67,60 @@ app.post("/tasks", (req, res) => {
 
 
 
+app.put("/tasks/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const task = tasks.find(task => task.id === id);
+
+  if (!task) {
+    return res.status(404).json({
+      error: `Task ${id} not found`
+    });
+  }
+
+  const { title, done } = req.body;
+
+  if (
+    (title === undefined && done === undefined) ||
+    (title !== undefined && title.trim() === "") ||
+    (done !== undefined && typeof done !== "boolean")
+  ) {
+    return res.status(400).json({
+      error: "Invalid request body"
+    });
+  }
+
+  if (title !== undefined) {
+    task.title = title.trim();
+  }
+
+  if (done !== undefined) {
+    task.done = done;
+  }
+
+  res.json(task);
+});
+
+
+
+app.delete("/tasks/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const index = tasks.findIndex(task => task.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      error: `Task ${id} not found`
+    });
+  }
+
+  tasks.splice(index, 1);
+
+  res.status(204).send();
+});
+
+
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
