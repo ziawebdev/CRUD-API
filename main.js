@@ -29,22 +29,55 @@ app.get("/health", (req, res) => {
 });
 
 app.get("/tasks", (req, res) => {
-  res.json(tasks);
+    db.all("SELECT * FROM tasks", [], (err, rows) => {
+
+        if (err) {
+            return res.status(500).json({
+                error: err.message
+            });
+        }
+
+        const tasks = rows.map(task => ({
+            id: task.id,
+            title: task.title,
+            done: Boolean(task.done)
+        }));
+
+        res.json(tasks);
+
+    });
 });
 
-
 app.get("/tasks/:id", (req, res) => {
-  const id = parseInt(req.params.id);
 
-  const task = tasks.find(task => task.id === id);
+    const id = parseInt(req.params.id);
 
-  if (!task) {
-    return res.status(404).json({
-      error: `Task ${id} not found`
-    });
-  }
+    db.get(
+        "SELECT * FROM tasks WHERE id = ?",
+        [id],
+        (err, row) => {
 
-  res.json(task);
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+
+            if (!row) {
+                return res.status(404).json({
+                    error: `Task ${id} not found`
+                });
+            }
+
+            res.json({
+                id: row.id,
+                title: row.title,
+                done: Boolean(row.done)
+            });
+
+        }
+    );
+
 });
 
 
