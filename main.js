@@ -7,11 +7,6 @@ const port = 3000;
 
 app.use(express.json());
 
-const tasks = [
-  { id: 1, title: "Learn Express", done: false },
-  { id: 2, title: "Build CRUD API", done: false },
-  { id: 3, title: "Push project to GitHub", done: true }
-];
 
 
 app.get("/", (req, res) => {
@@ -116,56 +111,94 @@ app.post("/tasks", (req, res) => {
 
 
 app.put("/tasks/:id", (req, res) => {
-  const id = parseInt(req.params.id);
 
-  const task = tasks.find(task => task.id === id);
+    const id = parseInt(req.params.id);
+    const { title, done } = req.body;
 
-  if (!task) {
-    return res.status(404).json({
-      error: `Task ${id} not found`
-    });
-  }
+    if (
+        (title === undefined && done === undefined) ||
+        (title !== undefined && title.trim() === "") ||
+        (done !== undefined && typeof done !== "boolean")
+    ) {
+        return res.status(400).json({
+            error: "Invalid request body"
+        });
+    }
 
-  const { title, done } = req.body;
+    db.get(
+        "SELECT * FROM tasks WHERE id = ?",
+        [id],
+        (err, row) => {
 
-  if (
-    (title === undefined && done === undefined) ||
-    (title !== undefined && title.trim() === "") ||
-    (done !== undefined && typeof done !== "boolean")
-  ) {
-    return res.status(400).json({
-      error: "Invalid request body"
-    });
-  }
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
 
-  if (title !== undefined) {
-    task.title = title.trim();
-  }
+            if (!row) {
+                return res.status(404).json({
+                    error: `Task ${id} not found`
+                });
+            }
 
-  if (done !== undefined) {
-    task.done = done;
-  }
+            const updatedTitle = title !== undefined ? title.trim() : row.title;
+            const updatedDone = done !== undefined ? (done ? 1 : 0) : row.done;
 
-  res.json(task);
+            db.run(
+                "UPDATE tasks SET title = ?, done = ? WHERE id = ?",
+                [updatedTitle, updatedDone, id],
+                function (err) {
+
+                    if (err) {
+                        return res.status(500).json({
+                            error: err.message
+                        });
+                    }
+
+                    res.json({
+                        id,
+                        title: updatedTitle,
+                        done: Boolean(updatedDone)
+                    });
+
+                }
+            );
+
+        }
+    );
+
 });
-
 
 
 app.delete("/tasks/:id", (req, res) => {
-  const id = parseInt(req.params.id);
 
-  const index = tasks.findIndex(task => task.id === id);
+    const id = parseInt(req.params.id);
 
-  if (index === -1) {
-    return res.status(404).json({
-      error: `Task ${id} not found`
-    });
-  }
+    db.run(
+        "DELETE FROM tasks WHERE id = ?",
+        [id],
+        function (err) {
 
-  tasks.splice(index, 1);
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
 
-  res.status(204).send();
+            if (this.changes === 0) {
+                return res.status(404).json({
+                    error: `Task ${id} not found`
+                });
+            }
+
+            res.status(204).send();
+
+        }
+    );
+
 });
+
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
