@@ -90,6 +90,53 @@ Add your Swagger UI screenshot here:
 
 ![Swagger Screenshot](images/Swagger UI.png)
 
+
+
+## Why SQLite?
+
+SQLite was chosen because it is lightweight, serverless, easy to set up, and stores all data in a single database file. It is ideal for learning backend development and building small applications.
+
+
+## Database
+
+The application automatically creates a SQLite database named:
+
+tasks.db
+
+It is stored in the project root directory.
+
+
+## Installation
+
+```bash
+npm install
+```
+
+Run:
+
+```bash
+npm start
+```
+
+or
+
+```bash
+npm run dev
+```
+
+## Example SQL Query
+
+```sql
+SELECT * FROM tasks;
+```
+
+
+## SQLite Database
+
+![Database Screenshot](images/database.png)
+
+
+
 ## Technologies Used
 
 - Node.js
