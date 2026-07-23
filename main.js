@@ -1,4 +1,5 @@
 const express = require('express');
+const db = require("./database");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./openapi.json");
 const app = express();
