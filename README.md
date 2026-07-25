@@ -143,6 +143,244 @@ SELECT * FROM tasks;
 - Express.js
 - Swagger UI Express
 
+
+# Task API – BE-04 Containerize Your Stack
+
+A RESTful Task Management API built with **Node.js**, **Express**, and **PostgreSQL**. This project began with a SQLite implementation and was migrated to PostgreSQL as part of the Backend AI Engineering BE-04 assignment.
+
+## Features
+
+- CRUD operations for tasks
+- PostgreSQL database integration
+- Environment variable configuration with `.env`
+- Swagger API documentation
+- Docker configuration (Dockerfile and docker-compose)
+- Persistent database design using PostgreSQL
+
+---
+
+## Tech Stack
+
+- Node.js
+- Express.js
+- PostgreSQL
+- pg
+- dotenv
+- Swagger UI
+- Docker & Docker Compose (configuration included)
+
+---
+
+## Project Structure
+
+```
+.
+├── docker/
+│   └── init/
+│       └── init.sql
+├── images/
+├── .env.example
+├── Dockerfile
+├── docker-compose.yml
+├── database.js
+├── main.js
+├── openapi.json
+├── package.json
+├── README.md
+```
+
+---
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+cd YOUR_REPOSITORY
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Create environment variables
+
+Copy `.env.example`
+
+```bash
+cp .env.example .env
+```
+
+Update the connection string.
+
+Example:
+
+```env
+PORT=3000
+DATABASE_URL=postgres://postgres:YOUR_PASSWORD@localhost:5432/cruddb
+```
+
+### 4. Start PostgreSQL
+
+Create the database:
+
+```sql
+CREATE DATABASE cruddb;
+```
+
+Execute the SQL inside:
+
+```
+docker/init/init.sql
+```
+
+or run it manually in PostgreSQL.
+
+### 5. Start the application
+
+```bash
+node main.js
+```
+
+Server:
+
+```
+http://localhost:3000
+```
+
+Swagger:
+
+```
+http://localhost:3000/docs
+```
+
+---
+
+# API Endpoints
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | / | API Information |
+| GET | /health | Health Check |
+| GET | /tasks | Get all tasks |
+| GET | /tasks/:id | Get a single task |
+| POST | /tasks | Create task |
+| PUT | /tasks/:id | Update task |
+| DELETE | /tasks/:id | Delete task |
+
+---
+
+# Example Request
+
+POST `/tasks`
+
+```json
+{
+  "title": "Learn PostgreSQL"
+}
+```
+
+Response
+
+```json
+{
+  "id": 4,
+  "title": "Learn PostgreSQL",
+  "done": false
+}
+```
+
+---
+
+# Database Migration
+
+The project originally used SQLite (`tasks.db`) for storage.
+
+As part of BE-04:
+
+- SQLite was replaced with PostgreSQL.
+- Database queries were updated to use the `pg` library.
+- Environment variables are managed through `.env`.
+- Database schema is initialized using `docker/init/init.sql`.
+
+---
+
+# Docker
+
+This project includes:
+
+- Dockerfile
+- docker-compose.yml
+- PostgreSQL initialization script
+
+The intended workflow is:
+
+```bash
+docker compose up
+```
+
+which starts both:
+
+- Application
+- PostgreSQL
+
+using a persistent Docker volume.
+
+> **Note:** Due to a local Windows WSL/Docker Desktop issue during development, the application was tested using a locally installed PostgreSQL instance. The Docker configuration is included and is intended to be used once the Docker environment is functioning correctly.
+
+---
+
+# Persistence
+
+Persistence was verified by:
+
+1. Creating tasks.
+2. Restarting the Node.js application.
+3. Confirming the data remained available in PostgreSQL.
+
+(The Docker volume persistence test is intended once Docker Desktop is operational.)
+
+---
+
+# Environment Variables
+
+Create a `.env` file:
+
+```env
+PORT=3000
+DATABASE_URL=postgres://postgres:YOUR_PASSWORD@localhost:5432/cruddb
+```
+
+---
+
+# Assignment Requirements
+
+- ✅ PostgreSQL integration
+- ✅ Environment variables
+- ✅ `.env.example`
+- ✅ PostgreSQL initialization script
+- ✅ Dockerfile
+- ✅ docker-compose.yml
+- ✅ CRUD API using PostgreSQL
+- ✅ Swagger documentation
+- ⚠ Docker runtime could not be validated due to a Windows WSL/Docker Desktop issue
+
+---
+
+# Future Improvements
+
+- Complete Docker Compose validation after resolving WSL.
+- Add Redis support.
+- Refactor to a repository pattern.
+- Add authentication with Supabase.
+- Add automated API tests.
+
+---
+
+
 ## Author
 
 ZIA KAZMI
