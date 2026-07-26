@@ -2,6 +2,333 @@
 
 A simple CRUD REST API built with **Node.js** and **Express.js**. It allows users to create, read, update, and delete tasks. The API also includes Swagger documentation.
 
+# Task API
+
+A RESTful Task Management API built with **Node.js**, **Express.js**, **PostgreSQL**, and **Supabase Authentication**. This project demonstrates CRUD operations, JWT-based authentication, Swagger API documentation, and Docker configuration.
+
+---
+
+# Features
+
+- RESTful CRUD API
+- PostgreSQL database
+- Supabase Authentication
+- JWT Authentication
+- Protected API routes
+- Environment variable configuration
+- Swagger API Documentation
+- Docker & Docker Compose configuration
+- PostgreSQL initialization script
+
+---
+
+# Tech Stack
+
+- Node.js
+- Express.js
+- PostgreSQL
+- Supabase
+- pg
+- dotenv
+- Swagger UI Express
+- Docker
+- Docker Compose
+
+---
+
+# Project Structure
+
+```
+.
+├── docker/
+│   └── init/
+│       └── init.sql
+├── images/
+├── middleware/
+│   └── auth.js
+├── routes/
+│   └── auth.js
+├── .env.example
+├── .gitignore
+├── database.js
+├── Dockerfile
+├── docker-compose.yml
+├── main.js
+├── openapi.json
+├── package.json
+├── package-lock.json
+├── README.md
+└── supabase.js
+```
+
+---
+
+# Installation
+
+## 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+cd YOUR_REPOSITORY
+```
+
+## 2. Install dependencies
+
+```bash
+npm install
+```
+
+## 3. Create a `.env` file
+
+Copy `.env.example` and update it.
+
+```env
+PORT=3000
+
+DATABASE_URL=postgres://postgres:YOUR_PASSWORD@localhost:5432/cruddb
+
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+
+SUPABASE_ANON_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
+```
+
+## 4. Start PostgreSQL
+
+Create the database:
+
+```sql
+CREATE DATABASE cruddb;
+```
+
+Execute the SQL file located at:
+
+```
+docker/init/init.sql
+```
+
+## 5. Run the application
+
+```bash
+node main.js
+```
+
+Server:
+
+```
+http://localhost:3000
+```
+
+Swagger Documentation:
+
+```
+http://localhost:3000/docs
+```
+
+---
+
+# Authentication
+
+## Register a User
+
+**POST**
+
+```
+/auth/signup
+```
+
+Example request:
+
+```json
+{
+  "email": "user@gmail.com",
+  "password": "Password123!"
+}
+```
+
+---
+
+## Login
+
+**POST**
+
+```
+/auth/login
+```
+
+Example request:
+
+```json
+{
+  "email": "user@gmail.com",
+  "password": "Password123!"
+}
+```
+
+Successful response returns a JWT access token.
+
+---
+
+## Protected Routes
+
+All task endpoints require a valid JWT.
+
+Include the following header:
+
+```
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+---
+
+# API Endpoints
+
+## Public
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | / | API Information |
+| GET | /health | Health Check |
+| POST | /auth/signup | Register User |
+| POST | /auth/login | Login User |
+
+---
+
+## Protected
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | /tasks | Get All Tasks |
+| GET | /tasks/:id | Get Task by ID |
+| POST | /tasks | Create Task |
+| PUT | /tasks/:id | Update Task |
+| DELETE | /tasks/:id | Delete Task |
+
+---
+
+# Swagger Documentation
+
+Open Swagger UI:
+
+```
+http://localhost:3000/docs
+```
+
+Use the **Authorize** button to enter your JWT access token before testing protected endpoints.
+
+---
+
+# PostgreSQL
+
+The application stores task data in a PostgreSQL database.
+
+Database initialization script:
+
+```
+docker/init/init.sql
+```
+
+Connection details are managed through environment variables.
+
+---
+
+# Docker
+
+The project includes:
+
+- Dockerfile
+- docker-compose.yml
+- PostgreSQL initialization script
+
+The intended command to run the application is:
+
+```bash
+docker compose up
+```
+
+> **Note:** Docker configuration is included in the project. During development, the application was tested using a locally installed PostgreSQL instance due a local Docker Desktop/WSL networking issue.
+
+---
+
+# Assignment Summary
+
+## A3 – Containerize Your Stack
+
+- PostgreSQL integration
+- Docker configuration
+- Environment variables
+- PostgreSQL initialization script
+- Persistent database storage
+
+## A4 – Authentication
+
+- Supabase Authentication
+- User Registration
+- User Login
+- JWT Authentication
+- Protected Routes
+- Authentication Middleware
+- Swagger Authentication
+
+---
+
+# Environment Variables
+
+Example `.env`
+
+```env
+PORT=3000
+
+DATABASE_URL=postgres://postgres:password@localhost:5432/cruddb
+
+SUPABASE_URL=https://your-project.supabase.co
+
+SUPABASE_ANON_KEY=your_publishable_key
+```
+
+---
+
+# Running the Project
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the server:
+
+```bash
+node main.js
+```
+
+Open:
+
+```
+http://localhost:3000
+```
+
+Swagger:
+
+```
+http://localhost:3000/docs
+```
+
+---
+
+# Future Improvements
+
+- Repository Pattern implementation
+- Docker Compose validation after resolving Docker Desktop/WSL issue
+- Redis integration
+- Automated API testing
+- Role-based authorization
+- Refresh token support
+
+---
+
+
+
+
 ## Features
 
 - Create a task

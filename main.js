@@ -2,6 +2,7 @@ const express = require('express');
 const db = require("./database");
 const swaggerUi = require("swagger-ui-express");
 const authRoutes = require("./routes/auth");
+const authenticate = require("./middleware/auth");
 const swaggerDocument = require("./openapi.json");
 const app = express();
 const port = 3000;
@@ -24,7 +25,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.get("/tasks", async (req, res) => {
+app.get("/tasks" , authenticate, async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM tasks ORDER BY id");
 
@@ -37,7 +38,7 @@ app.get("/tasks", async (req, res) => {
 });
 
 
-app.get("/tasks/:id", async (req, res) => {
+app.get("/tasks/:id", authenticate, async (req, res) => {
     const id = parseInt(req.params.id);
 
     try {
@@ -62,7 +63,7 @@ app.get("/tasks/:id", async (req, res) => {
 });
 
 
-app.post("/tasks", async (req, res) => {
+app.post("/tasks", authenticate, async (req, res) => {
 
     const { title } = req.body;
 
@@ -93,7 +94,7 @@ app.post("/tasks", async (req, res) => {
 
 
 
-app.put("/tasks/:id", async (req, res) => {
+app.put("/tasks/:id", authenticate, async (req, res) => {
 
     const id = parseInt(req.params.id);
     const { title, done } = req.body;
@@ -140,7 +141,7 @@ app.put("/tasks/:id", async (req, res) => {
 });
 
 
-app.delete("/tasks/:id", async (req, res) => {
+app.delete("/tasks/:id", authenticate,   async (req, res) => {
 
     const id = parseInt(req.params.id);
 

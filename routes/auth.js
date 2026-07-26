@@ -48,4 +48,10 @@ router.post("/login", async (req, res) => {
 
 });
 
+router.post("/logout",  (req, res) => {
+    res.json({
+        message: "Logout successful. Please discard the access token on the client."
+    });
+});
+
 module.exports = router;
