@@ -1,12 +1,13 @@
 const express = require('express');
 const db = require("./database");
 const swaggerUi = require("swagger-ui-express");
+const authRoutes = require("./routes/auth");
 const swaggerDocument = require("./openapi.json");
 const app = express();
 const port = 3000;
 
 app.use(express.json());
-
+app.use("/auth", authRoutes);
 
 
 app.get("/", (req, res) => {
